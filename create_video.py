@@ -1,13 +1,21 @@
-import ffmpeg
 import os
+import ffmpeg
 
-images = [f"output/images/img{i}.jpg" for i in range(3)]
-inputs = "|".join(images)
+image_inputs = "".join(
+    f"file 'output/images/img{i}.jpg'\n" for i in range(3)
+)
+with open("output/images.txt", "w") as f:
+    f.write(image_inputs)
 
-ffmpeg.input("output/voice.mp3").output(
+# Create slideshow
+ffmpeg.input("output/images.txt", format='concat', safe=0).output(
+    "output/temp.mp4", framerate=1, vf="scale=1280:720", vcodec="libx264"
+).run(overwrite_output=True)
+
+# Merge with audio
+ffmpeg.input("output/temp.mp4").output(
     "output/final_video.mp4",
-    vcodec='libx264',
-    acodec='aac',
-    shortest=None,
-    vf=f"movie={images[0]},fade=t=in:st=0:d=1"
+    i="output/voice.mp3",
+    codec="copy",
+    shortest=None
 ).run(overwrite_output=True)
