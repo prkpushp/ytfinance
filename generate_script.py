@@ -8,17 +8,18 @@ if not API_KEY:
     print("❌ GEMINI_API_KEY is not set.")
     sys.exit(1)
 
-url = f"https://generativelanguage.googleapis.com/v1/models/gemini-pro:generateContent?key={API_KEY}"
+url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key={API_KEY}"
 headers = {"Content-Type": "application/json"}
+
 prompt = "Write a YouTube video script on '5 Passive Income Ideas for 2025'. Keep it concise and engaging for voiceover."
 
 payload = {
-  "contents": [
-    {
-      "role": "user",
-      "parts": [{"text": prompt}]
-    }
-  ]
+    "contents": [
+        {
+            "role": "user",
+            "parts": [{"text": prompt}]
+        }
+    ]
 }
 
 response = requests.post(url, headers=headers, data=json.dumps(payload))
