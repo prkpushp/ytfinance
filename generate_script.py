@@ -1,7 +1,8 @@
 import requests
 import json
+import os
 
-API_KEY = "YOUR_GEMINI_API_KEY"
+API_KEY = os.getenv("AIzaSyBaHx9w6G6Ffz2Wq37wyEZYVi6b4REN8GQ")
 url = f"https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key={API_KEY}"
 headers = {"Content-Type": "application/json"}
 prompt = "Write a YouTube video script on '5 Passive Income Ideas for 2025'"
@@ -15,6 +16,7 @@ payload = {
     }
   ]
 }
+
 response = requests.post(url, headers=headers, data=json.dumps(payload))
 data = response.json()
 script_text = data["candidates"][0]["content"]["parts"][0]["text"]
