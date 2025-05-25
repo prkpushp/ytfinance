@@ -23,9 +23,21 @@ jobs:
 
     - name: Run automation pipeline
       run: |
+        mkdir -p output
         python generate_script.py
         python generate_voiceover.py
         python download_images.py
         python create_video.py
         python create_thumbnail.py
-        python upload_to_youtube.py
+
+    - name: Upload video artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: final_video
+        path: output/final_video.mp4
+
+    - name: Upload thumbnail artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: thumbnail
+        path: output/thumbnail.png
