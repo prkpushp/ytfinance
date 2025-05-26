@@ -31,6 +31,7 @@ jobs:
         python generate_voiceover.py
         python download_images.py
         python create_video.py
+        python merge_audio.py
         python create_thumbnail.py
 
     - name: Upload video artifact
