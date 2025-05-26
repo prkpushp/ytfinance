@@ -3,8 +3,6 @@ set -e
 
 mkdir -p output
 
-echo "🧹 Cleaning old list..."
-rm -f images/list.txt
 
 echo "📝 Creating list of image files..."
 for f in images/*.jpg; do
