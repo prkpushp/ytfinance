@@ -7,10 +7,9 @@ ffmpeg.input('output/images/img%d.jpg', framerate=1).output(
     vcodec='libx264'
 ).run(overwrite_output=True)
 
-# Merge slideshow with audio
-ffmpeg.input('output/temp.mp4').output(
-    'output/final_video.mp4',
-    i='output/voice.mp3',
-    codec='copy',
-    shortest=None
-).run(overwrite_output=True)
+
+ffmpeg
+    .input('output/temp.mp4')
+    .input('output/voice.mp3')
+    .output('output/final.mp4', vcodec='copy', acodec='aac', strict='experimental')
+    .run()
