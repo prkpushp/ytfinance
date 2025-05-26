@@ -27,12 +27,18 @@ jobs:
     - name: Run automation pipeline
       run: |
         mkdir -p output
+        ls -l output/
         #python generate_script.py
         python generate_voiceover.py
+        ls -l output/
         python download_images.py
+        ls -l output/
         python create_video.py
+        ls -l output/
         python merge_audio.py
+        ls -l output/
         python create_thumbnail.py
+        ls -l output/
 
     - name: Upload video artifact
       uses: actions/upload-artifact@v4
