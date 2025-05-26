@@ -4,7 +4,7 @@ set -e
 IMAGE_DIR="output/images"
 LIST_FILE="$IMAGE_DIR/list.txt"
 AUDIO_FILE="output/voice.mp3"
-OUTPUT_VIDEO="output/temp.mp4"
+OUTPUT_VIDEO="output/final_video.mp4"
 
 echo "📝 Creating list of image files..."
 
@@ -35,7 +35,6 @@ fi
 
 # Run ffmpeg from the images directory so that list.txt file and image files resolve correctly
 echo "🎬 Creating video from images and audio..."
-
 (
   cd "$IMAGE_DIR"
   ffmpeg -y -f concat -safe 0 -i list.txt -r 1 -vf "scale=trunc(iw/2)*2:trunc(ih/2)*2" -pix_fmt yuv420p temp_no_audio.mp4
@@ -43,7 +42,12 @@ echo "🎬 Creating video from images and audio..."
 
 # Now merge the audio, trim/pad if needed to match video duration
 echo "🔊 Merging audio with video..."
-
 ffmpeg -y -i "$IMAGE_DIR/temp_no_audio.mp4" -i "$AUDIO_FILE" -c:v copy -c:a aac -shortest "$OUTPUT_VIDEO"
 
 echo "✅ Video created successfully at $OUTPUT_VIDEO"
+
+# Clean up temporary files
+rm -f "$IMAGE_DIR/temp_no_audio.mp4"
+rm -f "$LIST_FILE"
+
+echo "🧹 Cleaned up temporary files"
