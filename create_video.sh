@@ -1,42 +1,57 @@
 #!/bin/bash
 set -e
 
-mkdir -p output
+# Variables
+IMAGE_DIR="output/images"
+LIST_FILE="$IMAGE_DIR/list.txt"
+VOICE_FILE="output/voice.mp3"
+OUTPUT_VIDEO="output/final_video.mp4"
+FPS=1           # Set fps for image duration control (1 frame per second)
+VIDEO_WIDTH=1280 # Desired width (adjust as needed)
+VIDEO_HEIGHT=720 # Desired height (must be divisible by 2)
 
+# Check if image directory exists and has images
+if [ ! -d "$IMAGE_DIR" ]; then
+  echo "❌ Image directory not found: $IMAGE_DIR"
+  exit 1
+fi
 
-echo "📝 Creating list of image files..."
-for f in images/*.jpg; do
-  echo "file '$f'" >> images/list.txt
+shopt -s nullglob
+images=("$IMAGE_DIR"/*.jpg "$IMAGE_DIR"/*.jpeg "$IMAGE_DIR"/*.png)
+if [ ${#images[@]} -eq 0 ]; then
+  echo "❌ No images found in $IMAGE_DIR"
+  exit 1
+fi
+shopt -u nullglob
+
+# Create or overwrite list.txt for ffmpeg concat demuxer
+echo "📝 Creating list of image files for ffmpeg..."
+
+> "$LIST_FILE"  # Truncate or create file
+
+for img in "${images[@]}"; do
+  # ffmpeg concat demuxer needs format: file 'filename'
+  echo "file '$img'" >> "$LIST_FILE"
+  # Duration per image, e.g., 3 seconds, can add if needed:
+  # echo "duration 3" >> "$LIST_FILE"
 done
 
-echo "🎞️ Creating temp video from images..."
-ffmpeg -y -f concat -safe 0 -i images/list.txt \
-  -vf "fps=1,scale=iw:trunc(ih/2)*2,format=yuv420p" \
-  -c:v libx264 output/temp.mp4 || {
-    echo "❌ Failed to create video from images."
-    exit 1
-}
+# Optional: repeat last file duration for proper concat
+# echo "file '${images[-1]}'" >> "$LIST_FILE"
 
-VIDEO="output/temp.mp4"
-AUDIO="voice.mp3"
-FINAL="output/final.mp4"
-
-if [[ ! -f "$VIDEO" ]]; then
-  echo "❌ Video file not found: $VIDEO"
+# Verify voice file exists
+if [ ! -f "$VOICE_FILE" ]; then
+  echo "❌ Voice file not found: $VOICE_FILE"
   exit 1
 fi
 
-if [[ ! -f "$AUDIO" ]]; then
-  echo "❌ Audio file not found: $AUDIO"
-  exit 1
-fi
+echo "🎬 Creating video from images and adding voiceover..."
 
-echo "🔊 Merging audio with video..."
-ffmpeg -y -i "$VIDEO" -i "$AUDIO" -c:v copy -c:a aac "$FINAL" || {
-  echo "❌ Failed to merge video and audio"
-  exit 1
-}
+ffmpeg -y -f concat -safe 0 -i "$LIST_FILE" \
+  -r $FPS \
+  -vf "scale=$VIDEO_WIDTH:$VIDEO_HEIGHT:flags=lanczos" \
+  -c:v libx264 -pix_fmt yuv420p -preset veryfast -crf 23 \
+  -i "$VOICE_FILE" \
+  -c:a aac -shortest "$OUTPUT_VIDEO"
 
-echo "✅ Final video created at: $FINAL"
-
-ffprobe output/final.mp4
+echo "✅ Video created successfully: $OUTPUT_VIDEO"
