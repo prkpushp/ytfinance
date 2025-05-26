@@ -2,7 +2,7 @@ requests
 gtts
 pyttsx3
 Pillow
-ffmpeg-python
-google-auth
-google-auth-oauthlib
-google-api-python-client
+#ffmpeg-python
+#google-auth
+#google-auth-oauthlib
+#google-api-python-client
