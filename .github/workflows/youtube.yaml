@@ -27,7 +27,7 @@ jobs:
     - name: Run automation pipeline
       run: |
         mkdir -p output
-        python generate_script.py
+        #python generate_script.py
         python generate_voiceover.py
         python download_images.py
         python create_video.py
