@@ -4,7 +4,7 @@ set -e
 IMAGE_DIR="output/images"
 LIST_FILE="$IMAGE_DIR/list.txt"
 AUDIO_FILE="output/voice.mp3"
-OUTPUT_VIDEO="output/final_video.mp4"
+OUTPUT_VIDEO="output/temp.mp4"
 
 echo "📝 Creating list of image files..."
 
