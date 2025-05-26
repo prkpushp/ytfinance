@@ -4,7 +4,7 @@ set -e
 mkdir -p output
 
 echo "📦 Generating video from images..."
-ffmpeg -y -framerate 1 -start_number 0 -i images/img%d.jpg -c:v libx264 -r 30 -pix_fmt yuv420p output/temp.mp4 || {
+ffmpeg -y -framerate 1 -start_number 0 -i output/images/img%d.jpg -c:v libx264 -r 30 -pix_fmt yuv420p output/temp.mp4 || {
   echo "❌ Failed to create video from images."
   exit 1
 }
