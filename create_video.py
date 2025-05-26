@@ -1,10 +1,11 @@
 import os
 import ffmpeg
 
-# Write image list for concat
+# Ensure correct path references
 image_inputs = "".join(
     f"file 'output/images/img{i}.jpg'\n" for i in range(3)
 )
+
 with open("output/images.txt", "w") as f:
     f.write(image_inputs)
 
