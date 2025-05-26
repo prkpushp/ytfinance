@@ -2,7 +2,7 @@ import requests
 import json
 import os
 
-API_KEY = os.getenv("GEMINI_API_KEY")
+API_KEY = "AIzaSyBaHx9w6G6Ffz2Wq37wyEZYVi6b4REN8GQ"
 url = f"https://generativelanguage.googleapis.com/v1/models/gemini-2.0-flash:generateContent?key={API_KEY}"
 headers = {"Content-Type": "application/json"}
 prompt = "Write a YouTube video script on '5 Passive Income Ideas for 2025'"
