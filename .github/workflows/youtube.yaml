@@ -33,7 +33,7 @@ jobs:
         ls -l output/
         python download_images.py
         ls -l output/
-        python create_video.py
+        bash create_video.sh
         ls -l output/
         python merge_audio.py
         ls -l output/
